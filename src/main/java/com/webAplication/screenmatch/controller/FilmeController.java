@@ -2,6 +2,8 @@ package com.webAplication.screenmatch.controller;
 
 import com.webAplication.screenmatch.domain.filme.DadosCadastroFilme;
 import com.webAplication.screenmatch.domain.filme.Filme;
+import com.webAplication.screenmatch.domain.filme.FilmeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,9 @@ import java.util.List;
 @RequestMapping("/filmes")
 public class FilmeController {
 
-    private List<Filme> filmes = new ArrayList<>();
+    //private List<Filme> filmes = new ArrayList<>();
+    @Autowired
+    private FilmeRepository repository;
 
     @GetMapping("/formulario")
     public String carregaPaginaFormulario() {
@@ -24,14 +28,16 @@ public class FilmeController {
 
     @GetMapping
     public String carregaPaginaListagem(Model model) {
-        model.addAttribute("lista", filmes);
+        //model.addAttribute("lista", filmes);
+        model.addAttribute("lista", repository.findAll());
         return "filmes/listagem";
     }
 
     @PostMapping
     public String cadastraFilmes(DadosCadastroFilme dados) {
         var filme = new Filme(dados);
-        filmes.add(filme);
+        //filmes.add(filme);
+        repository.save(filme);
         return "redirect:/filmes";  //por padrao este modo chama pelo metodo get
     }
 
